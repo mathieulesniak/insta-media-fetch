@@ -1,0 +1,13 @@
+{
+    "name": "mathieulesniak/insta-media-fetch",
+    "description": "Fetch Instagram public profile infos and latest pictures",
+    "type": "library",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Mathieu LESNIAK",
+            "email": "mathieu@lesniak.fr"
+        }
+    ],
+    "require": {}
+}
