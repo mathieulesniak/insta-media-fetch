@@ -8,9 +8,9 @@ namespace InstaMediaFetch;
 class Profile
 {
     /**
-     * @var int $userId Profile unique ID
+     * @var string $userId Profile unique ID
      */
-    protected $userId = 0;
+    protected $userId = "0";
 
     /**
      * @var string $username Profile username
@@ -52,13 +52,13 @@ class Profile
      */
     protected $medias;
 
-    public function setId(int $userId): Profile
+    public function setId(string $userId): Profile
     {
         $this->userId = $userId;
         return $this;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
         return $this->userId;
     }
@@ -110,7 +110,7 @@ class Profile
 
     public function getNbFollows(): int
     {
-        return $this->nbFollowers;
+        return $this->nbFollows;
     }
 
     public function setBiography(string $bio): Profile
