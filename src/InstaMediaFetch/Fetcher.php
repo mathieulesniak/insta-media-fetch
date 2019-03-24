@@ -21,16 +21,23 @@ class Fetcher
 
     private function parseProfile(Profile $profile): Profile
     {
-        if (isset($this->sharedData['entry_data']['ProfilePage'][0]['graphql'][            'user'            ])
+        if (
+            isset(
+                $this->sharedData['entry_data']['ProfilePage'][0]['graphql'][
+                    'user'
+                ]
+            )
         ) {
             $userData =
                 $this->sharedData['entry_data']['ProfilePage'][0]['graphql'][
                     'user'
                 ];
             $profile->setUsername($userData['username']);
+            $profile->setId($userData['id']);
             $profile->setNbFollowers($userData['edge_followed_by']['count']);
             $profile->setNbFollows($userData['edge_follow']['count']);
             $profile->setBiography($userData['biography']);
+            $profile->setExternalUrl($userData['external_url']);
             $profile->setProfilePic($userData['profile_pic_url']);
             $profile->setProfilePicHD($userData['profile_pic_url_hd']);
 
@@ -66,7 +73,12 @@ class Fetcher
     private function parseMedias()
     {
         $medias = [];
-        if (isset($this->sharedData['entry_data']['ProfilePage'][0]['graphql'][            'user'            ]['edge_owner_to_timeline_media']['edges'])
+        if (
+            isset(
+                $this->sharedData['entry_data']['ProfilePage'][0]['graphql'][
+                    'user'
+                ]['edge_owner_to_timeline_media']['edges']
+            )
         ) {
             foreach (
                 $this->sharedData['entry_data']['ProfilePage'][0]['graphql'][
@@ -77,14 +89,16 @@ class Fetcher
                 $edgeMedia = $edgeMedia['node'];
                 $media = new Media();
                 $media->setCaption(
-                    $edgeMedia['edge_media_to_caption']['edges'][0]['node']
+                    $edgeMedia['edge_media_to_caption']['edges'][0]['node'][
+                        'text'
+                    ]
                 );
 
                 $media->setWidth($edgeMedia['dimensions']['width']);
                 $media->setHeight($edgeMedia['dimensions']['height']);
                 $media->setTimestamp($edgeMedia['taken_at_timestamp']);
                 $media->setNbLikes($edgeMedia['edge_liked_by']['count']);
-                $media->setNbLikes(
+                $media->setNbComments(
                     $edgeMedia['edge_media_to_comment']['count']
                 );
                 $media->setUrl($edgeMedia['display_url']);
@@ -105,11 +119,12 @@ class Fetcher
 
     private function extractSharedData($pageBody): ?array
     {
-        if (preg_match_all(
-            '#\_sharedData \= (.*?)\;\<\/script\>#',
-            $pageBody,
-            $out
-        )
+        if (
+            preg_match_all(
+                '#\_sharedData \= (.*?)\;\<\/script\>#',
+                $pageBody,
+                $out
+            )
         ) {
             return json_decode($out[1][0], true, 512, JSON_BIGINT_AS_STRING);
         }
