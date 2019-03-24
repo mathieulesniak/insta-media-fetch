@@ -96,6 +96,7 @@ class Fetcher
 
                 $media->setWidth($edgeMedia['dimensions']['width']);
                 $media->setHeight($edgeMedia['dimensions']['height']);
+                $media->setShortCode($edgeMedia['shortcode']);
                 $media->setTimestamp($edgeMedia['taken_at_timestamp']);
                 $media->setNbLikes($edgeMedia['edge_liked_by']['count']);
                 $media->setNbComments(

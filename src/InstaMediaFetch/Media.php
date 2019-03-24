@@ -4,42 +4,47 @@ namespace InstaMediaFetch;
 class Media
 {
     /**
-     * @var string $caption Media caption 
+     * @var string $caption Media caption
      */
     private $caption;
 
     /**
-     * @var int $timestamp Media taken at timestamp 
+     * @var int $timestamp Media taken at timestamp
      */
     private $timestamp;
 
     /**
-     * @var int $width Media width 
+     * @var int $width Media width
      */
     private $width = 0;
 
     /**
-     * @var int $height Media height 
+     * @var int $height Media height
      */
     private $height = 0;
 
     /**
-     * @var int $nbLikes Media number of likes 
+     * @var int $nbLikes Media number of likes
      */
     private $nbLikes = 0;
 
     /**
-     * @var int $nbComments Media number of comments 
+     * @var int $nbComments Media number of comments
      */
     private $nbComments = 0;
 
     /**
-     * @var string $url Media url 
+     * @var string $shortCode Media public ID
+     */
+    private $shortCode = '';
+
+    /**
+     * @var string $url Media url
      */
     private $url = '';
 
     /**
-     * @var array $thumbnails Media thumbnails list 
+     * @var array $thumbnails Media thumbnails list
      */
     private $thumbnails = [];
 
@@ -112,6 +117,17 @@ class Media
     public function getNbComments(): int
     {
         return $this->nbComments;
+    }
+
+    public function setShortcode(string $shortCode): Media
+    {
+        $this->shortCode = $shortCode;
+        return $this;
+    }
+
+    public function getShortCode(): string
+    {
+        return $this->shortCode;
     }
 
     public function setUrl(string $url): Media
