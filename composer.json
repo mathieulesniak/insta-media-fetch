@@ -9,5 +9,10 @@
       "email": "mathieu@lesniak.fr"
     }
   ],
+  "autoload": {
+    "psr-0": {
+      "InstaMediaFetch": "src/"
+    }
+  },
   "require": {}
 }
