@@ -1,25 +1,60 @@
 <?php
+
 namespace InstaMediaFetch;
 
+/**
+ * InstaMediaFetch Fetcher
+ *
+ * Fetch Instagram page and parse content
+ */
 class Fetcher
 {
     private $sharedData = '';
 
-    public function fetchMedia($accountName): Profile
+    /**
+     * Fetch media from an instagram account
+     *
+     * @param string $accountName
+     * @return Profile|bool
+     */
+    public function fetchMedia(string $accountName)
     {
         $body = '';
-        $body = $this->curlFetch('https://www.instagram.com/' . $accountName);
+        $body = $this->curlFetch(
+            sprintf('https://www.instagram.com/%s', $accountName)
+        );
+        // No data from curl call
+        if ($body === false) {
+            return false;
+        }
 
         $this->sharedData = $this->extractSharedData($body);
+        // failed to extract shared data
+        if ($this->sharedData === false) {
+            return false;
+        }
+
         $profile = new Profile();
         $profile = $this->parseProfile($profile);
+
+        // Failed to parse profile
+        if ($profile === false) {
+            return false;
+        }
+
         $medias = $this->parseMedias();
         $profile->setMedias($medias);
 
         return $profile;
     }
 
-    private function parseProfile(Profile $profile): Profile
+    /**
+     * Parse Instagram profile
+     *
+     * @param Profile $profile
+     * @return Profile|bool
+     */
+    private function parseProfile(Profile $profile)
     {
         if (
             isset(
@@ -43,14 +78,21 @@ class Fetcher
 
             return $profile;
         }
-        throw new \Exception("Can't find user in shared data");
+
+        return false;
     }
 
+    /**
+     * Fetch url content
+     *
+     * @param string $url
+     * @return string|bool
+     */
     private function curlFetch($url)
     {
         $curlHandler = curl_init($url);
         if ($curlHandler === false) {
-            throw new \Exception("Can't init curl");
+            return false;
         }
 
         $curlOptions = [
@@ -70,7 +112,12 @@ class Fetcher
         return $curlResponse;
     }
 
-    private function parseMedias()
+    /**
+     * Parse media entities from shared data
+     *
+     * @return array
+     */
+    private function parseMedias(): array
     {
         $medias = [];
         if (
@@ -118,6 +165,12 @@ class Fetcher
         return $medias;
     }
 
+    /**
+     * Extract js shared data from page content
+     *
+     * @param string $pageBody
+     * @return array|null
+     */
     private function extractSharedData($pageBody): ?array
     {
         if (
